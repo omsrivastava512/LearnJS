@@ -1,5 +1,112 @@
 # **Javascript Fundamentals**
 
+## **Brief**
+
+JavaScript stores variables in two primary memory locations: the **Stack** and the **Heap**. The type of data determines where it's stored.
+
+* **Primitive Types are stored on the Stack.** These include `Number`, `String`, `Boolean`, `null`, `undefined`, `Symbol`, and `BigInt`. They are stored **by value**. This means the variable holds the actual data directly. The Stack is a fast, fixed-size, last-in-first-out (LIFO) data structure used for static memory allocation.
+
+* **Reference Types are stored on the Heap.** These include `Object`, `Array`, and `Function`. They are stored **by reference**. This means the variable on the Stack holds a *pointer* (a memory address) to the actual object, which resides in the Heap. The Heap is a larger, less organized region of memory for dynamic memory allocation.
+
+-----
+
+### How Different Types Are Stored and Called
+
+* **Primitives (Number, String, etc.):**
+  * **Storage:** When you declare `let score = 100;`, the value `100` is placed directly onto the stack at the memory location associated with `score`.
+  * **Calling:** When you use `score`, the engine goes directly to that spot on the stack and retrieves the value `100`.
+
+* **Objects & Arrays (Reference Types):**
+  * **Storage:** When you declare `let user = {name: "Alex"};`, two things happen:
+        1.  The object `{name: "Alex"}` is created in the Heap.
+        2.  A pointer (e.g., memory address `0x1A2B`) is placed on the Stack at the location for the `user` variable. This pointer "points" to the object in the Heap.
+  * **Calling:** When you access `user.name`, the engine first goes to the `user` variable on the Stack, gets the pointer (`0x1A2B`), then follows that pointer to the object on the Heap to find the `name` property.
+
+* **Functions:**
+  * **Storage:** Functions are a special type of object and are also stored by reference. The entire function body is placed on the Heap, and a pointer to it is stored in the variable on the Stack.
+  * **Calling:** When you invoke `myFunction()`, the engine follows the pointer from the Stack to the Heap to find the function's code and then executes it, creating a new execution context on the call stack.
+
+* **Other Primitive Types:**
+  * `Symbol`: Symbols are simple and their entire purpose is to be unique identifiers. They are true primitives and are stored by value on the stack. Each `Symbol()` call creates a new, unique value.
+
+  ```javascript
+    let sym1 = Symbol('id');
+    let sym2 = Symbol('id');
+    console.log(sym1 === sym2); // false - Proves they are unique values.
+  ```
+
+  * `BigInt`: BigInt is considered a primitive type, but because its size can be enormous, far exceeding the fixed size of a stack slot, larger than Number.MAX_SAFE_INTEGER (which is 2⁵³ - 1), its data is stored on the heap. The variable on the stack holds a reference to the BigInt data on the heap. ``` let bigN = 12345n, bigM = bigInt("122434"); ```
+
+    * However, just like strings, BigInts are immutable. You cannot change a BigInt in place. Any mathematical operation on a BigInt creates a new BigInt object on the heap, and the variable's reference is updated. This allows it to maintain primitive-like "by value" behavior even though it's stored "by reference."
+
+-----
+
+### Time of Interpretation (Hoisting) 🧠
+
+Hoisting is JavaScript's behavior of moving declarations to the top of their scope before code execution. This happens during the "creation phase" of the execution context.
+
+* **Functions:** Entire function declarations (`function name() {...}`) are hoisted. This means you can call a function *before* it appears in your code.
+
+    ```javascript
+    sayHello(); // Works! Outputs: "Hello there"
+
+    function sayHello() {
+        console.log("Hello there");
+    }
+    ```
+
+* **Variables (`var`, `let`, `const`):**
+
+  * `var`: Declarations are hoisted and initialized with a default value of `undefined`.
+        ```javascript
+        console.log(myVar); // Outputs: undefined (No error)
+        var myVar = 10;
+        ```
+  * `let` and `const`: Declarations are hoisted but **not initialized**. They are in a "Temporal Dead Zone" (TDZ) from the start of the scope until the line where they are declared. Accessing them in the TDZ throws a `ReferenceError`.
+        ```javascript
+        console.log(myLet); // Throws ReferenceError: Cannot access 'myLet' before initialization
+        let myLet = 20;
+        ```
+
+-----
+
+### What Happens When a Variable's Type Changes?
+
+This is a key feature of JavaScript: it is a **dynamically-typed language**. The variable itself does not have a type; the **value it holds** does. The interpreter figures out the type at runtime.
+
+Let's trace an example: `let data = "hello";` and then `data = 123;`
+
+1. **`let data = "hello";`**
+
+      * The JavaScript engine allocates space on the **stack** for a variable named `data`.
+      * It sees the value is `"hello"`, a primitive string.
+      * It stores the value `"hello"` on the heap's string pool. However, because strings are immutable (they cannot be changed), JavaScript can ensure they behave just like true primitives (pass-by-value)
+
+2. **`data = 123;`**
+
+      * The engine encounters the reassignment.
+      * It simply **overwrites** the existing value at the memory location for `data` on the stack.
+      * The old value `"hello"` is now gone (and will be garbage collected). The new primitive number `123` now occupies that space.
+
+### String Interning
+
+When the engine encounters a string literal (e.g., "hello"), it checks an internal, table-like structure (often on the Heap) to see if that exact string already exists.
+
+* If it exists, the variable on the stack gets a pointer to that existing string in the pool.
+* If it doesn't exist, the string is created in the pool, and the variable gets a pointer to it.
+
+```javascript
+let a = "reusable string";
+let b = "reusable string";
+
+// a and b both point to the *exact same* memory location in the string pool.
+// This is an engine optimization to save memory.
+```
+
+Objects and Arrays are designed to be mutable (changeable). Their properties and elements can be added, removed, or modified at any time. If JavaScript "pooled" arrays, it would lead to chaos.
+
+-----
+
 ## **Variables**
 
 ### **1. Dynamically Typed**
