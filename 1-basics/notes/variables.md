@@ -41,7 +41,7 @@ JavaScript stores variables in two primary memory locations: the **Stack** and t
 
 -----
 
-### Time of Interpretation (Hoisting) 🧠
+### Time of Interpretation (Hoisting)
 
 Hoisting is JavaScript's behavior of moving declarations to the top of their scope before code execution. This happens during the "creation phase" of the execution context.
 
@@ -88,6 +88,8 @@ Let's trace an example: `let data = "hello";` and then `data = 123;`
       * It simply **overwrites** the existing value at the memory location for `data` on the stack.
       * The old value `"hello"` is now gone (and will be garbage collected). The new primitive number `123` now occupies that space.
 
+-----
+
 ### String Interning
 
 When the engine encounters a string literal (e.g., "hello"), it checks an internal, table-like structure (often on the Heap) to see if that exact string already exists.
@@ -95,17 +97,79 @@ When the engine encounters a string literal (e.g., "hello"), it checks an intern
 * If it exists, the variable on the stack gets a pointer to that existing string in the pool.
 * If it doesn't exist, the string is created in the pool, and the variable gets a pointer to it.
 
-```javascript
-let a = "reusable string";
-let b = "reusable string";
+    ```javascript
+    let a = "reusable string";
+    let b = "reusable string";
 
-// a and b both point to the *exact same* memory location in the string pool.
-// This is an engine optimization to save memory.
-```
+    // a and b both point to the *exact same* memory location in the string pool.
+    // This is an engine optimization to save memory.
+    ```
 
 Objects and Arrays are designed to be mutable (changeable). Their properties and elements can be added, removed, or modified at any time. If JavaScript "pooled" arrays, it would lead to chaos.
 
 -----
+
+### The Call Stack
+
+The Call Stack's primary job is to manage **function execution**. It keeps track of which function is currently running and where to go next when that function finishes. It operates on a **Last-In, First-Out (LIFO)** principle.
+
+* **What it Stores:**
+  * **Execution Contexts:** When a function is called, a "stack frame" is created and pushed onto the top of the stack. This frame contains the function's arguments, local variables, and the return address.
+  * **Primitive Types:** Variables holding **primitive values** (`Number`, `Boolean`, `null`, `undefined`, `Symbol`) are stored directly in the stack frame. This makes them extremely fast to access.
+  * **References:** For complex types, the stack stores a **pointer** (a memory address) to the object's actual location in the Heap.
+
+* **Key Characteristics:**
+  * **Fast:** Accessing memory on the stack is very fast because it's a highly organized, linear structure.
+  * **Fixed Size:** The stack has a limited size. If you have too many nested function calls (like in infinite recursion), you'll run out of space, which results in a **"Stack Overflow"** error.
+
+### The Heap
+
+The Heap is a large, unstructured region of memory used for **dynamic memory allocation**. It's where all the complex data structures in your program live.
+
+* **What it Stores:**
+  * **Reference Types:** All **objects** (`Object`, `Array`, `Function`, etc.) are stored in the Heap. Their size isn't known at compile time and can change, so they need a flexible storage space.
+
+* **How it Works with the Stack:**
+    When you declare `let user = {name: "Alex"};`:
+    1. The object `{name: "Alex"}` is created and stored somewhere in the vast Heap.
+    2. The `user` variable is placed on the **Stack**, but instead of holding the whole object, it holds a **reference** (e.g., memory address `0x1A2B`) that points to the object's location in the Heap.
+
+* **Key Characteristics:**
+  * **Slower Access:** It's slower than the stack because it requires following a reference to find the data.
+  * **Large and Flexible:** It's much larger than the stack and can grow as your application needs more memory.
+  * **Garbage Collection:** The JavaScript engine has a process called a "Garbage Collector" that periodically scans the Heap. It finds and removes objects that are no longer referenced by any variable on the Stack, freeing up memory and preventing leaks.
+
+### The Code Cache
+
+The Code Cache is a memory area dedicated to **storing compiled machine code** for performance. JavaScript is an interpreted language, but modern engines use a technique called **Just-In-Time (JIT) Compilation** to make it run much faster.
+
+* **What it Stores:**
+  * **Optimized Machine Code:** The raw, low-level code that your computer's processor can execute directly.
+
+* **How it Works (JIT Compilation):**
+  1. **Interpretation:** Initially, the engine's interpreter reads your JavaScript and executes it line by line.
+  2. **Monitoring:** At the same time, a profiler watches your code for parts that are executed frequently (so-called "hot" functions or loops).
+  3. **Compilation:** These "hot" sections are passed to an optimizing compiler. It converts them into highly efficient machine code.
+  4. **Caching:** This machine code is then stored in the **Code Cache**.
+  5. **Execution:** The next time that "hot" function is called, the engine skips the slow interpretation step and executes the super-fast machine code directly from the cache.
+
+* **Key Characteristics:**
+  * **Speed:** It's the reason modern JavaScript is incredibly fast. It combines the flexibility of an interpreted language with the raw power of a compiled one.
+  * **Browser Feature:** You'll see this in action when you reload a webpage. The browser can cache the compiled code, making subsequent loads of the same script much faster.
+
+```md
+┌─────────────────────────────────────┐
+│         JavaScript Engine           │
+├─────────────────────────────────────┤
+│  Parser → AST → Bytecode → Machine  │
+│  Code (JIT Compilation)             │
+├─────────────────────────────────────┤
+│         Memory Management           │
+│  ┌─────────┬─────────┬─────────────┐│
+│  │  Stack  │  Heap   │ Code Cache  ││
+│  └─────────┴─────────┴─────────────┘│
+└─────────────────────────────────────┘
+```
 
 ## **Variables**
 
