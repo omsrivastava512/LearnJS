@@ -29,7 +29,7 @@ JavaScript stores variables in two primary memory locations: the **Stack** and t
 * **Other Primitive Types:**
   * `Symbol`: Symbols are simple and their entire purpose is to be unique identifiers. They are true primitives and are stored by value on the stack. Each `Symbol()` call creates a new, unique value.
 
-  ```javascript
+  ```javascript 
     let sym1 = Symbol('id');
     let sym2 = Symbol('id');
     console.log(sym1 === sym2); // false - Proves they are unique values.
