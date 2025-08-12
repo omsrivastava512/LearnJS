@@ -1,6 +1,36 @@
 # Javascript Basics
 
+## Table of Contents
+
+- [Part 1](#part-1)
+  - [Syntax & Grammar](#syntax--grammar)
+  - [Variables](#variables)
+    - [`var` (The Old Way)](#var-the-old-way)
+    - [`let` (The Modern Way)](#let-the-modern-way)
+    - [`const` (For Constants)](#const-for-constants)
+  - [Data Types](#data-types)
+    - [Primitive Types](#primitive-types)
+    - [Object Type](#object-type)
+- [Part 2](#part-2)
+  - [Operators](#operators)
+    - [Arithmetic Operators](#arithmetic-operators)
+    - [Assignment Operators](#assignment-operators)
+    - [Comparison Operators](#comparison-operators)
+    - [Logical Operators](#logical-operators)
+    - [Bitwise Operators](#bitwise-operators)
+  - [Control Flow](#control-flow)
+    - [`if` / `else if` / `else`](#if--else-if--else)
+    - [`switch`](#switch)
+    - [Ternary Operator](#ternary-operator)
+  - [Loops](#loops)
+    - [`for` Loop](#for-loop)
+    - [`while` Loop](#while-loop)
+    - [`do...while` Loop](#dowhile-loop)
+    - [`for...of` Loop (Modern)](#forof-loop-modern)
+    - [`for...in` Loop](#forin-loop)
+
 (AI Assisted/Generated)
+
 
 ## Part 1
 
@@ -8,7 +38,7 @@
 
 This is the set of rules that dictates how a valid JavaScript program is written.  The core components are statements and expressions.
 
-* **Statements**: A statement is a complete instruction that performs an action.  For example, declaring a variable or logging to the console are statements. Each statement typically ends with a semicolon or next line. This means that statements can either be seperated by next line or by a semicolon or both.
+- **Statements**: A statement is a complete instruction that performs an action.  For example, declaring a variable or logging to the console are statements. Each statement typically ends with a semicolon or next line. This means that statements can either be seperated by next line or by a semicolon or both.
 
     ```javascript
     let message = "Hello, world!" // A declaration statement (next line seperated)
@@ -16,7 +46,7 @@ This is the set of rules that dictates how a valid JavaScript program is written
     console.log(message);          // A call statement (both)
     ```
 
-* **Expressions**: An expression is any piece of code that resolves to a single value. It's like a phrase that represents a noun. `2 + 2` is an expression that resolves to the value `4`. The string `"Hello"` is also an expression.
+- **Expressions**: An expression is any piece of code that resolves to a single value. It's like a phrase that represents a noun. `2 + 2` is an expression that resolves to the value `4`. The string `"Hello"` is also an expression.
 
     ```javascript
     5 * 10       // Resolves to the value 50
@@ -26,7 +56,7 @@ This is the set of rules that dictates how a valid JavaScript program is written
     b = 5 * a    // resolved to 25
     ```
   
-  * Expressions can be comma seperated and one or more expressions can form a statement.
+  - Expressions can be comma seperated and one or more expressions can form a statement.
   
   ```javascript
     let a = 5, b = 7, c = a + b;    // comma seperated expressions
@@ -41,7 +71,7 @@ This is the set of rules that dictates how a valid JavaScript program is written
 
   ```
 
-* **Semicolons (;)**: Semicolons are used to **separate statements**. While JavaScript has a feature called **Automatic Semicolon Insertion (ASI)** that often lets you omit them, it's a best practice to **always use them**. Relying on ASI can lead to subtle and hard-to-find bugs.
+- **Semicolons (;)**: Semicolons are used to **separate statements**. While JavaScript has a feature called **Automatic Semicolon Insertion (ASI)** that often lets you omit them, it's a best practice to **always use them**. Relying on ASI can lead to subtle and hard-to-find bugs.
 
 -----
 
@@ -53,15 +83,15 @@ Variables are named containers for storing data values. In JavaScript, you decla
 
 The `var` keyword has been around since the beginning of JavaScript. It is **function-scoped**.
 
-* **Scope**: A variable declared with `var` is accessible anywhere within the **function** it's declared in, regardless of block (`{...}`). For example, 
+- **Scope**: A variable declared with `var` is accessible anywhere within the **function** it's declared in, regardless of block (`{...}`). For example,
 
 ```javascript
 for (var i = 0; i < 5; i++);
 console.log(i);     // i will be accessible
 ```
 
-* **Reassignment & Redeclaration**: You can update its value and even re-declare the same variable without an error.
-* **Hoisting**: `var` **declarations** are "hoisted" to the top of their scope, meaning they are processed before any code is executed. They are initialized with `undefined`.
+- **Reassignment & Redeclaration**: You can update its value and even re-declare the same variable without an error.
+- **Hoisting**: `var` **declarations** are "hoisted" to the top of their scope, meaning they are processed before any code is executed. They are initialized with `undefined`.
 
 <!-- end list -->
 
@@ -80,9 +110,9 @@ function varTest() {
 
 Introduced in ES6 (2015), `let` is the preferred way to declare variables whose value might change. It is **block-scoped**.
 
-* **Scope**: A variable declared with `let` is only accessible within the **block** (`{...}`) where it's defined. This is more predictable and less error-prone.
-* **Reassignment & Redeclaration**: You can update its value, but you **cannot** re-declare it in the same scope.
-* **Hoisting**: `let` variables are also hoisted but are not initialized. Accessing them before declaration results in a `ReferenceError` (this is called the "Temporal Dead Zone").
+- **Scope**: A variable declared with `let` is only accessible within the **block** (`{...}`) where it's defined. This is more predictable and less error-prone.
+- **Reassignment & Redeclaration**: You can update its value, but you **cannot** re-declare it in the same scope.
+- **Hoisting**: `let` variables are also hoisted but are not initialized. Accessing them before declaration results in a `ReferenceError` (this is called the "Temporal Dead Zone").
 
 <!-- end list -->
 
@@ -101,9 +131,9 @@ function letTest() {
 
 Also introduced in ES6, `const` is for declaring variables that should not be reassigned. It is also **block-scoped**.
 
-* **Scope**: Just like `let`, `const` is **block-scoped**.
-* **Reassignment & Redeclaration**: You **must** assign a value at declaration, and you **cannot** update the variable's assignment or re-declare it.
-* **Important Caveat**: For objects and arrays declared with `const`, the variable itself cannot be reassigned, but the **properties of the object or the elements of the array can be changed**.
+- **Scope**: Just like `let`, `const` is **block-scoped**.
+- **Reassignment & Redeclaration**: You **must** assign a value at declaration, and you **cannot** update the variable's assignment or re-declare it.
+- **Important Caveat**: For objects and arrays declared with `const`, the variable itself cannot be reassigned, but the **properties of the object or the elements of the array can be changed**.
 
 <!-- end list -->
 
@@ -120,7 +150,7 @@ person.name = "Bob"; // This is allowed!
 
 -----
 
-### Data Types 🧬
+### Data Types
 
 JavaScript is a **dynamically typed** language, which means you don't need to specify the type of data a variable will hold. The engine figures it out at runtime based on the value it holds. Data types are categorized into two main groups: **Primitive Types** and the **Object Type**.
 
@@ -202,14 +232,14 @@ Operators are special symbols used to perform operations on values and variables
 
 These are for performing standard mathematical calculations.
 
-* `+` (Addition)
-* `-` (Subtraction)
-* `*` (Multiplication)
-* `/` (Division)
-* `%` (Modulus/Remainder)
-* `**` (Exponentiation - ES6)
-* `++` (Increment)
-* `--` (Decrement)
+- `+` (Addition)
+- `-` (Subtraction)
+- `*` (Multiplication)
+- `/` (Division)
+- `%` (Modulus/Remainder)
+- `**` (Exponentiation - ES6)
+- `++` (Increment)
+- `--` (Decrement)
 
 <!-- end list -->
 
@@ -226,11 +256,11 @@ x++; // x is now 11
 
 These are used to assign values to variables.
 
-* `=` (Assignment)
-* `+=` (Add and assign)
-* `-=` (Subtract and assign)
-* `*=` (Multiply and assign)
-* `/=` (Divide and assign)
+- `=` (Assignment)
+- `+=` (Add and assign)
+- `-=` (Subtract and assign)
+- `*=` (Multiply and assign)
+- `/=` (Divide and assign)
 
 <!-- end list -->
 
@@ -244,12 +274,12 @@ score -= 25; // score is now 125
 
 These are used to compare two values, resulting in a boolean (`true` or `false`).
 
-* `==` (Loose Equality): Compares values after **type coercion**. It tries to convert the values to a common type before comparing. **Avoid this.**
-* `===` (Strict Equality): Compares both value and type. **Always use this.**
-* `!=` (Loose Inequality)
-* `!==` (Strict Inequality)
-* `>` (Greater than), `<` (Less than)
-* `>=` (Greater than or equal to), `<=` (Less than or equal to)
+- `==` (Loose Equality): Compares values after **type coercion**. It tries to convert the values to a common type before comparing. **Avoid this.**
+- `===` (Strict Equality): Compares both value and type. **Always use this.**
+- `!=` (Loose Inequality)
+- `!==` (Strict Inequality)
+- `>` (Greater than), `<` (Less than)
+- `>=` (Greater than or equal to), `<=` (Less than or equal to)
 
 The distinction between `==` and `===` is critical:
 
@@ -267,9 +297,9 @@ console.log(0 === false);// false (number is not the same type as boolean)
 
 These are used to combine multiple boolean expressions.
 
-* `&&` (Logical AND): Returns `true` only if **both** operands are true.
-* `||` (Logical OR): Returns `true` if **at least one** operand is true.
-* `!` (Logical NOT): Inverts a boolean value (`true` becomes `false`, `false` becomes `true`).
+- `&&` (Logical AND): Returns `true` only if **both** operands are true.
+- `||` (Logical OR): Returns `true` if **at least one** operand is true.
+- `!` (Logical NOT): Inverts a boolean value (`true` becomes `false`, `false` becomes `true`).
 
 <!-- end list -->
 
@@ -313,9 +343,9 @@ if (temperature > 30) {
 
 A `switch` statement is a cleaner alternative to a long `if/else if/else` chain when you're comparing a single value against multiple possibilities.
 
-* `case`: Defines a block of code to be executed if the expression matches the case.
-* `break`: Stops the execution from "falling through" to the next case.
-* `default`: An optional clause that runs if no case matches.
+- `case`: Defines a block of code to be executed if the expression matches the case.
+- `break`: Stops the execution from "falling through" to the next case.
+- `default`: An optional clause that runs if no case matches.
 
 <!-- end list -->
 
@@ -364,7 +394,7 @@ for (let i = 0; i < 5; i++) {
 
 #### `while` Loop
 
-A `while` loop executes as long as a specified condition is true. The condition is checked **before** each iteration. 
+A `while` loop executes as long as a specified condition is true. The condition is checked **before** each iteration.
 
 ```javascript
 let count = 0;
@@ -448,3 +478,5 @@ Object.defineProperty(obj, "secret", {
 |--------|-----------|------|
 | Enumerable | Object properties | Can be listed using `for...in`, `Object.keys()`, etc.|
 | Iterable | Whole objects | Can be looped over using for...of (must have a [Symbol.iterator])|
+
+**Iterators** often use the prototype `forEach()` method when you want to execute a function for each item in an array and don't need to break out of the loop.  The return value of `forEach()` is always `undefined`. And there is no way to stop a forEach() loop early. It will always run for every element in the array.
