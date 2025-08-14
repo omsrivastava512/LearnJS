@@ -182,7 +182,7 @@ try {
   let x = y + 1; // ReferenceError: y is not defined
   ```
 
----
+-----
 
 ### 🔍 Summary Table
 
@@ -243,7 +243,7 @@ An **Error Boundary** is a component that catches errors in its child components
 
 -----
 
-### Uncaught Exceptions & Unhandled Rejections
+### Global Uncaught Exceptions & Unhandled Rejections
 
 What happens if an error is thrown but no `try...catch` block ever catches it? It becomes a global error.
 
@@ -252,30 +252,122 @@ What happens if an error is thrown but no `try...catch` block ever catches it? I
 
 You can listen for these globally to act as a "final safety net."
 
-* **In the Browser:**
+**In the Browser:**
 
-    ```javascript
-    window.onerror = (message, source, lineno, colno, error) => {
-      console.log("An uncaught exception occurred!");
-      // Send this error to your logging service
-    };
+  ```javascript
+  window.onerror = (message, source, lineno, colno, error) => {
+    console.log("An uncaught exception occurred!");
+    // Send this error to your logging service
+  };
 
-    window.onunhandledrejection = event => {
-      console.log(`An unhandled promise rejection occurred: ${event.reason}`);
-      // Send this event.reason to your logging service
-    };
-    ```
+  window.onunhandledrejection = event => {
+    console.log(`An unhandled promise rejection occurred: ${event.reason}`);
+    // Send this event.reason to your logging service
+  };
+  ```
 
-  * **In Node.js:**
+**In Node.js:**
 
-    ```javascript
-    process.on('uncaughtException', (err, origin) => {
-      console.error(`Caught exception: ${err}\n` + `Exception origin: ${origin}`);
-      // Log the error, then exit. Do not resume!
-      process.exit(1);
-    });
-    ```
+```javascript
+process.on('uncaughtException', (err, origin) => {
+  console.error(`Caught exception: ${err}\n` + `Exception origin: ${origin}`);
+  // Log the error, then exit. Do not resume!
+  process.exit(1);
+});
+```
 
 **Log and Die.** When an uncaught exception occurs, your application is in an undefined state. A memory resource might be corrupted, or a file handle left open. The only safe thing to do is to log the error in detail and shut down the process. A process manager (like PM2 or a Docker orchestrator) should then restart it in a clean state. **Never try to resume an application after an uncaught exception.**
 
 -----
+
+### **Error Normalization: Creating a Common Language for Failure**
+
+In a large application, especially one with microservices, errors come from dozens of sources: database drivers, third-party APIs, HTTP clients, user input validation, etc. Each one has its own error format.
+
+Error Normalization is the practice of catching these varied errors and converting them into a single, consistent format for your application. You might define a standard internal error structure that your entire system uses.
+
+Example of a normalized error:
+
+``` javascript
+{
+  name: 'DatabaseError', // Your custom, high-level error name.
+  message: 'Could not retrieve user profile.', // A user-safe message.
+  code: 'DB_CONN_FAILED', // An internal, machine-readable code.
+  severity: 'critical', // For alerting (info, warning, error, critical).
+  isOperational: true, // Follows the philosophy we discussed.
+  cause: { ... } // The original error object from the database driver.
+}
+```
+
+## Types of Errors
+
+### SyntaxError
+
+This is an error in the code's structure that violates the rules of JavaScript's grammar. It's unique because it's thrown during the initial **parsing phase**, before any of your code is executed.
+
+* **When and How It Occurs:** The engine's parser scans your code to understand it. If it encounters a sequence of characters that doesn't conform to valid JavaScript syntax, it stops immediately and throws a `SyntaxError`.
+  * A typo like a missing parenthesis, bracket, or brace: `console.log("hello")`
+  * An invalid assignment: `let 1a = "invalid";`
+  * Using a reserved word as a variable name: `let let = 5;`
+  * A misplaced keyword, like `await` outside of an `async` function.
+
+* **Impact:** **Fatal to script execution.** If a `<script>` tag contains a `SyntaxError`, none of the code within that script will run. The browser or Node.js environment won't even attempt to execute it because it couldn't be successfully parsed into an executable format.
+
+-----
+
+### ReferenceError
+
+This error occurs when you try to use a variable that doesn't exist or hasn't been initialized yet. It's an error of memory access or scope.
+
+* **When and How It Occurs:** This happens during **runtime**.
+
+  * Accessing a variable that was never declared: `console.log(myUndeclaredVar);`
+  * A simple typo in a variable name: `let userName = "Alex"; console.log(userNmae);`
+  * Accessing a `let` or `const` variable before its declaration (within the **Temporal Dead Zone** or TDZ):
+
+    ```javascript
+    console.log(myVar); // ReferenceError: Cannot access 'myVar' before initialization
+    let myVar = 10;
+    ```
+
+* **Impact:** It immediately stops the execution of the current code block. In a simple script, this will halt the entire program. In a larger application, it will stop the function it occurred in, and the error will propagate up the call stack until it's caught or crashes the application.
+
+-----
+
+### TypeError
+
+This is arguably the most common runtime error in JavaScript. It occurs when an operation is performed on a value of the wrong data type. The syntax is correct, the variable exists, but the **type** of the value is incompatible with the operation.
+
+* **When and How It Occurs:** During **runtime**.
+  * Trying to access a property on `null` or `undefined`: This is the classic `TypeError`. An API call fails and returns `null`, but your code still tries to do `result.data`.
+  * Calling something that is not a function: `let name = "Alex"; name();`
+  * Using an array method on a non-array: `let user = { name: "Alex" }; user.map(u => ...);`
+  * Attempting to reassign a `const` variable.
+
+* **Impact:** Like a `ReferenceError`, it halts the current execution path and propagates up the call stack. This error almost always signifies a **programmer error (a bug)**. Your code made an incorrect assumption about the state or type of a variable.
+
+-----
+
+### RangeError
+
+This error is thrown when a numeric value is not within its allowed range or set of values.
+
+* **When and How It Occurs:** During **runtime**, usually in specific numerical or array operations.
+
+  * Creating an array with an invalid length: `new Array(-1);` or `new Array(Infinity);`
+  * Passing an invalid value to number formatting functions: `(12.345).toFixed(-1);` or `(10).toPrecision(500);`
+  * Deep recursion that leads to a stack overflow, which is technically a `RangeError` in many environments because the call stack size has exceeded its allowed range.
+
+* **Impact:** Halts execution. It's less common than a `TypeError` but often points to logical errors in algorithms or data processing where numbers are calculated incorrectly before being used in a range-sensitive function.
+
+-----
+
+### URIError
+
+This is a more specialized error that occurs when one of the global URI-handling functions is used incorrectly.
+
+* **When and How It Occurs:** During **runtime**, when you pass a malformed or illegal string to a URI function.
+  * `decodeURIComponent('%');` // A single '%' is not a valid start of an encoded sequence.
+  * `decodeURI('https://example.com/%%invalid');`
+
+* **Impact:** Halts execution. This is typically an **operational error**, often caused by receiving corrupted or improperly encoded data from an external source, like a URL query parameter.
