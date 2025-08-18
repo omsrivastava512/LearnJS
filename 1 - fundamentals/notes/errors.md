@@ -1,13 +1,36 @@
 # **Javascript Core**
 
+- [**Errors**](#errors)
+  - [Programmer vs. Operational Errors](#programmer-vs-operational-errors)
+    - [Programmer Errors (Bugs)](#1-programmer-errors-bugs)
+    - [Operational Errors (Exceptions)](#2-operational-errors-exceptions)
+  - [Asynchronous Errors](#asynchronous-errors)
+  - [Advanced Pattern: Custom, Semantic Errors](#advanced-pattern-custom-semantic-errors)
+- [**Ways To Log Errors**](#ways-to-log-errors)
+  - [`console.error()`: Logging an Error](#consoleerror-logging-an-error)
+  - [`throw`: Throwing an Error](#throw-throwing-an-error)
+  - [JavaScript Interpreter Errors](#javascript-interpreter-errors)
+  - [Summary Table](#summary-table)
+- [**Advanced Error Handling Strategies**](#advanced-error-handling-strategies)
+  - [The `finally` Block: Cleanup](#the-finally-block-cleanup)
+  - [Error Boundaries:](#error-boundaries)
+  - [Global Uncaught Exceptions & Unhandled Rejections](#global-uncaught-exceptions--unhandled-rejections)
+  - [Error Normalization: Creating a Common Language for Failure](#error-normalization-creating-a-common-language-for-failure)
+- [**Types of Errors**](#types-of-errors)
+  - [SyntaxError](#syntaxerror)
+  - [ReferenceError](#referenceerror)
+  - [TypeError](#typeerror)
+  - [RangeError](#rangeerror)
+  - [URIError](#urierror)
+
 ## **Errors**
 
 An `Error` in JavaScript is a structured object. When you `catch (e)`, `e` is an instance of the `Error` class (or one of its subclasses) with the following properties:
 
-* **`name`**: A string indicating the error type (e.g., `'TypeError'`, `'ReferenceError'`).
-* **`message`**: A human-readable string describing what went wrong for developers.
-* **`stack`**: A highly detailed, multi-line string showing the "call stack"—the sequence of function calls that led to the error. The stack trace is generated **at the moment the `Error` object is created**, not when it's thrown.
-* **`cause` (Modern JS - ES2022)**:  The `cause` property allows you to wrap an error within another error. This is crucial for maintaining context in complex systems.
+- **`name`**: A string indicating the error type (e.g., `'TypeError'`, `'ReferenceError'`).
+- **`message`**: A human-readable string describing what went wrong for developers.
+- **`stack`**: A highly detailed, multi-line string showing the "call stack"—the sequence of function calls that led to the error. The stack trace is generated **at the moment the `Error` object is created**, not when it's thrown.
+- **`cause` (Modern JS - ES2022)**:  The `cause` property allows you to wrap an error within another error. This is crucial for maintaining context in complex systems.
 
 **Example of Error Wrapping:**
 
@@ -39,17 +62,17 @@ try {
 
 These are mistakes in your code. They represent a state that should **never happen**. You violated the contract of a function or a language rule.
 
-* **Examples**: `TypeError` (calling `null.method()`), `ReferenceError` (accessing an undeclared variable), passing a string where a number is required.
-* **How to Handle**: **You don't.** You should let the application crash (or restart in a controlled way, like with a Node.js process manager).
-* **The Goal**: The error log is your feedback. **Fix the code.** Programmer errors are not runtime problems to be handled gracefully; they are development-time problems to be eliminated.
+- **Examples**: `TypeError` (calling `null.method()`), `ReferenceError` (accessing an undeclared variable), passing a string where a number is required.
+- **How to Handle**: **You don't.** You should let the application crash (or restart in a controlled way, like with a Node.js process manager).
+- **The Goal**: The error log is your feedback. **Fix the code.** Programmer errors are not runtime problems to be handled gracefully; they are development-time problems to be eliminated.
 
 #### 2. Operational Errors (Exceptions)
 
 These are expected, albeit unsuccessful, events that occur at runtime due to factors outside your direct code's logic. Your code is correct, but the world it interacts with is not.
 
-* **Examples**: The network connection is down (API call fails), a file you're trying to read doesn't exist, the user enters invalid input, a third-party service is rate-limiting you.
-* **How to Handle**: **This is what `try...catch` was made for.** You anticipate these failures and build logic to handle them: retry the connection, show a friendly message to the user, fall back to cached data.
-* **The Goal**: Maintain the program's integrity and provide a good user experience despite external failures.
+- **Examples**: The network connection is down (API call fails), a file you're trying to read doesn't exist, the user enters invalid input, a third-party service is rate-limiting you.
+- **How to Handle**: **This is what `try...catch` was made for.** You anticipate these failures and build logic to handle them: retry the connection, show a friendly message to the user, fall back to cached data.
+- **The Goal**: Maintain the program's integrity and provide a good user experience despite external failures.
 
 -----
 
@@ -138,14 +161,14 @@ try {
 }
 ```
 
-### **Ways To Log Errors**
+## **Ways To Log Errors**
 
 ### `console.error()`: Logging an Error
 
-* **Purpose**: Used to **log** error messages to the console.
-* **Effect**: Does **not stop** code execution.
-* **Use Case**: Helpful for debugging or tracking issues **without interrupting the flow**.
-* **Example**:
+- **Purpose**: Used to **log** error messages to the console.
+- **Effect**: Does **not stop** code execution.
+- **Use Case**: Helpful for debugging or tracking issues **without interrupting the flow**.
+- **Example**:
 
   ```javascript
   console.error("Something went wrong");
@@ -156,10 +179,10 @@ try {
 
 ### `throw`: Throwing an Error
 
-* **Purpose**: Used to **intentionally raise** an error.
-* **Effect**: **Immediately halts** execution unless caught with `try...catch`.
-* **Use Case**: When you want to enforce error handling or signal that something went wrong.
-* **Example**:
+- **Purpose**: Used to **intentionally raise** an error.
+- **Effect**: **Immediately halts** execution unless caught with `try...catch`.
+- **Use Case**: When you want to enforce error handling or signal that something went wrong.
+- **Example**:
 
   ```javascript
   throw new Error("Critical failure");
@@ -170,13 +193,13 @@ try {
 
 ### JavaScript Interpreter Errors
 
-* **Purpose**: These are **automatic errors** thrown by the JS engine.
-* **Effect**: Stops execution unless handled.
-* **Types**:
-  * **SyntaxError**: Code structure is invalid.
-  * **ReferenceError**: Accessing undefined variables.
-  * **TypeError**: Using a value in an invalid way.
-* **Example**:
+- **Purpose**: These are **automatic errors** thrown by the JS engine.
+- **Effect**: Stops execution unless handled.
+- **Types**:
+  - **SyntaxError**: Code structure is invalid.
+  - **ReferenceError**: Accessing undefined variables.
+  - **TypeError**: Using a value in an invalid way.
+- **Example**:
 
   ```javascript
   let x = y + 1; // ReferenceError: y is not defined
@@ -184,7 +207,7 @@ try {
 
 -----
 
-### 🔍 Summary Table
+### Summary Table
 
 | Type                     | Stops Execution | Can Be Caught | Purpose                      |
 |--------------------------|-----------------|----------------|------------------------------|
@@ -198,17 +221,19 @@ You'd typically use `throw` for critical failures and `console.error()` for diag
 
 -----
 
+## Advanced Error Handling Strategies
+
 ### **The `finally` Block: Cleanup**
 
 Code inside a `finally` block is **guaranteed to execute** after the `try` and `catch` blocks, regardless of whether an error was thrown or not.
 
 Its purpose isn't to handle the error, but to perform cleanup. This prevents your application from being left in an inconsistent state.
 
-* **Common Use Cases:**
-  * Stopping a loading spinner.
-  * Closing a file or database connection.
-  * Releasing a resource.
-  * Closing an event listener or steam reader
+- **Common Use Cases:**
+  - Stopping a loading spinner.
+  - Closing a file or database connection.
+  - Releasing a resource.
+  - Closing an event listener or steam reader
 
 **For example:** A UI loading state.
 
@@ -238,8 +263,8 @@ In modern component-based applications (like React), a single error in a minor c
 
 An **Error Boundary** is a component that catches errors in its child components, logs them, and displays a fallback UI instead of letting the entire app crash.
 
-* **How it Works:** Wrapping sections of your UI in a special "boundary" component. If any component inside that boundary throws an error during rendering, the boundary's special lifecycle hooks (`getDerivedStateFromError` and `componentDidCatch` in React) are triggered.
-* **The Purpose:** This is the ultimate implementation of handling **operational errors** gracefully. You accept that a part of the UI might fail (e.g., due to bad API data), and you prevent that failure from destroying the user's entire session. The user sees a message like "Sorry, this widget couldn't load," while the rest of the application remains fully interactive.
+- **How it Works:** Wrapping sections of your UI in a special "boundary" component. If any component inside that boundary throws an error during rendering, the boundary's special lifecycle hooks (`getDerivedStateFromError` and `componentDidCatch` in React) are triggered.
+- **The Purpose:** This is the ultimate implementation of handling **operational errors** gracefully. You accept that a part of the UI might fail (e.g., due to bad API data), and you prevent that failure from destroying the user's entire session. The user sees a message like "Sorry, this widget couldn't load," while the rest of the application remains fully interactive.
 
 -----
 
@@ -305,13 +330,13 @@ Example of a normalized error:
 
 This is an error in the code's structure that violates the rules of JavaScript's grammar. It's unique because it's thrown during the initial **parsing phase**, before any of your code is executed.
 
-* **When and How It Occurs:** The engine's parser scans your code to understand it. If it encounters a sequence of characters that doesn't conform to valid JavaScript syntax, it stops immediately and throws a `SyntaxError`.
-  * A typo like a missing parenthesis, bracket, or brace: `console.log("hello")`
-  * An invalid assignment: `let 1a = "invalid";`
-  * Using a reserved word as a variable name: `let let = 5;`
-  * A misplaced keyword, like `await` outside of an `async` function.
+- **When and How It Occurs:** The engine's parser scans your code to understand it. If it encounters a sequence of characters that doesn't conform to valid JavaScript syntax, it stops immediately and throws a `SyntaxError`.
+  - A typo like a missing parenthesis, bracket, or brace: `console.log("hello")`
+  - An invalid assignment: `let 1a = "invalid";`
+  - Using a reserved word as a variable name: `let let = 5;`
+  - A misplaced keyword, like `await` outside of an `async` function.
 
-* **Impact:** **Fatal to script execution.** If a `<script>` tag contains a `SyntaxError`, none of the code within that script will run. The browser or Node.js environment won't even attempt to execute it because it couldn't be successfully parsed into an executable format.
+- **Impact:** **Fatal to script execution.** If a `<script>` tag contains a `SyntaxError`, none of the code within that script will run. The browser or Node.js environment won't even attempt to execute it because it couldn't be successfully parsed into an executable format.
 
 -----
 
@@ -319,18 +344,18 @@ This is an error in the code's structure that violates the rules of JavaScript's
 
 This error occurs when you try to use a variable that doesn't exist or hasn't been initialized yet. It's an error of memory access or scope.
 
-* **When and How It Occurs:** This happens during **runtime**.
+- **When and How It Occurs:** This happens during **runtime**.
 
-  * Accessing a variable that was never declared: `console.log(myUndeclaredVar);`
-  * A simple typo in a variable name: `let userName = "Alex"; console.log(userNmae);`
-  * Accessing a `let` or `const` variable before its declaration (within the **Temporal Dead Zone** or TDZ):
+  - Accessing a variable that was never declared: `console.log(myUndeclaredVar);`
+  - A simple typo in a variable name: `let userName = "Alex"; console.log(userNmae);`
+  - Accessing a `let` or `const` variable before its declaration (within the **Temporal Dead Zone** or TDZ):
 
     ```javascript
     console.log(myVar); // ReferenceError: Cannot access 'myVar' before initialization
     let myVar = 10;
     ```
 
-* **Impact:** It immediately stops the execution of the current code block. In a simple script, this will halt the entire program. In a larger application, it will stop the function it occurred in, and the error will propagate up the call stack until it's caught or crashes the application.
+- **Impact:** It immediately stops the execution of the current code block. In a simple script, this will halt the entire program. In a larger application, it will stop the function it occurred in, and the error will propagate up the call stack until it's caught or crashes the application.
 
 -----
 
@@ -338,13 +363,13 @@ This error occurs when you try to use a variable that doesn't exist or hasn't be
 
 This is arguably the most common runtime error in JavaScript. It occurs when an operation is performed on a value of the wrong data type. The syntax is correct, the variable exists, but the **type** of the value is incompatible with the operation.
 
-* **When and How It Occurs:** During **runtime**.
-  * Trying to access a property on `null` or `undefined`: This is the classic `TypeError`. An API call fails and returns `null`, but your code still tries to do `result.data`.
-  * Calling something that is not a function: `let name = "Alex"; name();`
-  * Using an array method on a non-array: `let user = { name: "Alex" }; user.map(u => ...);`
-  * Attempting to reassign a `const` variable.
+- **When and How It Occurs:** During **runtime**.
+  - Trying to access a property on `null` or `undefined`: This is the classic `TypeError`. An API call fails and returns `null`, but your code still tries to do `result.data`.
+  - Calling something that is not a function: `let name = "Alex"; name();`
+  - Using an array method on a non-array: `let user = { name: "Alex" }; user.map(u => ...);`
+  - Attempting to reassign a `const` variable.
 
-* **Impact:** Like a `ReferenceError`, it halts the current execution path and propagates up the call stack. This error almost always signifies a **programmer error (a bug)**. Your code made an incorrect assumption about the state or type of a variable.
+- **Impact:** Like a `ReferenceError`, it halts the current execution path and propagates up the call stack. This error almost always signifies a **programmer error (a bug)**. Your code made an incorrect assumption about the state or type of a variable.
 
 -----
 
@@ -352,13 +377,13 @@ This is arguably the most common runtime error in JavaScript. It occurs when an 
 
 This error is thrown when a numeric value is not within its allowed range or set of values.
 
-* **When and How It Occurs:** During **runtime**, usually in specific numerical or array operations.
+- **When and How It Occurs:** During **runtime**, usually in specific numerical or array operations.
 
-  * Creating an array with an invalid length: `new Array(-1);` or `new Array(Infinity);`
-  * Passing an invalid value to number formatting functions: `(12.345).toFixed(-1);` or `(10).toPrecision(500);`
+  - Creating an array with an invalid length: `new Array(-1);` or `new Array(Infinity);`
+  - Passing an invalid value to number formatting functions: `(12.345).toFixed(-1);` or `(10).toPrecision(500);`
   * Deep recursion that leads to a stack overflow, which is technically a `RangeError` in many environments because the call stack size has exceeded its allowed range.
 
-* **Impact:** Halts execution. It's less common than a `TypeError` but often points to logical errors in algorithms or data processing where numbers are calculated incorrectly before being used in a range-sensitive function.
+- **Impact:** Halts execution. It's less common than a `TypeError` but often points to logical errors in algorithms or data processing where numbers are calculated incorrectly before being used in a range-sensitive function.
 
 -----
 
@@ -366,8 +391,8 @@ This error is thrown when a numeric value is not within its allowed range or set
 
 This is a more specialized error that occurs when one of the global URI-handling functions is used incorrectly.
 
-* **When and How It Occurs:** During **runtime**, when you pass a malformed or illegal string to a URI function.
-  * `decodeURIComponent('%');` // A single '%' is not a valid start of an encoded sequence.
-  * `decodeURI('https://example.com/%%invalid');`
+- **When and How It Occurs:** During **runtime**, when you pass a malformed or illegal string to a URI function.
+  - `decodeURIComponent('%');` // A single '%' is not a valid start of an encoded sequence.
+  - `decodeURI('https://example.com/%%invalid');`
 
-* **Impact:** Halts execution. This is typically an **operational error**, often caused by receiving corrupted or improperly encoded data from an external source, like a URL query parameter.
+- **Impact:** Halts execution. This is typically an **operational error**, often caused by receiving corrupted or improperly encoded data from an external source, like a URL query parameter.

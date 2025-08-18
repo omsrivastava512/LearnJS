@@ -3,7 +3,7 @@
 ## Structure
 
 ```md
-📁 1-basics/
+📁 1 - fundamentals/
 ├── README.md
 ├── notes/
 │   └── variables.md
