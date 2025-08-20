@@ -1,4 +1,4 @@
-# **Javascript Core**
+# **Javascript Core** (AI Assisted)
 
 - [**Errors**](#errors)
   - [Programmer vs. Operational Errors](#programmer-vs-operational-errors)
@@ -58,7 +58,7 @@ try {
 
 ### **Programmer vs. Operational Errors**
 
-#### 1. Programmer Errors (Bugs)
+#### 1. Programmer Errors
 
 These are mistakes in your code. They represent a state that should **never happen**. You violated the contract of a function or a language rule.
 

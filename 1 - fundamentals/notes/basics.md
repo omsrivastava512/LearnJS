@@ -1,4 +1,4 @@
-# Javascript Basics
+# **Javascript Basics** (AI Assisted)
 
 ## Table of Contents
 

@@ -1,4 +1,4 @@
-# **Javascript Core**
+# **Javascript Core** (AI Assisted)
 
 ## **Table of Contents**
 
@@ -37,8 +37,8 @@ JavaScript stores variables in two primary memory locations: the **Stack** and t
 ### How Different Types Are Stored and Called
 
 - **Primitives (Number, String, etc.):**
-  * **Storage:** When you declare `let score = 100;`, the value `100` is placed directly onto the stack at the memory location associated with `score`.
-  * **Calling:** When you use `score`, the engine goes directly to that spot on the stack and retrieves the value `100`.
+  - **Storage:** When you declare `let score = 100;`, the value `100` is placed directly onto the stack at the memory location associated with `score`.
+  - **Calling:** When you use `score`, the engine goes directly to that spot on the stack and retrieves the value `100`.
 
 - **Objects & Arrays (Reference Types):**
   - **Storage:** When you declare `let user = {name: "Alex"};`, two things happen:
@@ -53,11 +53,11 @@ JavaScript stores variables in two primary memory locations: the **Stack** and t
 - **Other Primitive Types:**
   - `Symbol`: Symbols are simple and their entire purpose is to be unique identifiers. They are true primitives and are stored by value on the stack. Each `Symbol()` call creates a new, unique value.
 
-```javascript 
-  let sym1 = Symbol('id');
-  let sym2 = Symbol('id');
-  console.log(sym1 === sym2); // false - Proves they are unique values.
-```
+    ```javascript
+      let sym1 = Symbol('id');
+      let sym2 = Symbol('id');
+      console.log(sym1 === sym2); // false - Proves they are unique values.
+    ```
 
 - `BigInt`: BigInt is considered a primitive type, but because its size can be enormous, far exceeding the fixed size of a stack slot, larger than Number.MAX_SAFE_INTEGER (which is 2⁵³ - 1), its data is stored on the heap. The variable on the stack holds a reference to the BigInt data on the heap. ``` let bigN = 12345n, bigM = bigInt("122434"); ```
 
@@ -159,9 +159,9 @@ The Heap is a large, unstructured region of memory used for **dynamic memory all
     2. The `user` variable is placed on the **Stack**, but instead of holding the whole object, it holds a **reference** (e.g., memory address `0x1A2B`) that points to the object's location in the Heap.
 
 - **Key Characteristics:**
-  * **Slower Access:** It's slower than the stack because it requires following a reference to find the data.
-  * **Large and Flexible:** It's much larger than the stack and can grow as your application needs more memory.
-  * **Garbage Collection:** The JavaScript engine has a process called a "Garbage Collector" that periodically scans the Heap. It finds and removes objects that are no longer referenced by any variable on the Stack, freeing up memory and preventing leaks.
+  - **Slower Access:** It's slower than the stack because it requires following a reference to find the data.
+  - **Large and Flexible:** It's much larger than the stack and can grow as your application needs more memory.
+  - **Garbage Collection:** The JavaScript engine has a process called a "Garbage Collector" that periodically scans the Heap. It finds and removes objects that are no longer referenced by any variable on the Stack, freeing up memory and preventing leaks.
 
 ### The Code Cache
 
