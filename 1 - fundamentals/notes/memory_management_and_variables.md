@@ -168,7 +168,7 @@ The Heap is a large, unstructured region of memory used for **dynamic memory all
 The Code Cache is a memory area dedicated to **storing compiled machine code** for performance. JavaScript is an interpreted language, but modern engines use a technique called **Just-In-Time (JIT) Compilation** to make it run much faster.
 
 - **What it Stores:**
-  * **Optimized Machine Code:** The raw, low-level code that your computer's processor can execute directly.
+  - **Optimized Machine Code:** The raw, low-level code that your computer's processor can execute directly.
 
 - **How it Works (JIT Compilation):**
   1. **Interpretation:** Initially, the engine's interpreter reads your JavaScript and executes it line by line.

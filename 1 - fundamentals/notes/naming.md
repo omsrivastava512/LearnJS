@@ -28,8 +28,6 @@ Naming conventions are a set of guidelines, not strict rules enforced by the com
 
 The core principle is to name things based on what they are or what they do, making the code self-documenting.
 
-
-
 -----
 
 ## Casing Styles
@@ -150,11 +148,14 @@ class ApiService {
   - ❌ `function processData(data) { ... }`
   - ✅ `let userToDeactivate = getUser();`
   - ❌ `let temp = getUser();`
-- **Indicate Units and Data Structures**: 
+- **Indicate Units**: Include units when dealing with numbers that have units.
   - ✅ `const timeoutInMs = 5000;`, `const elementWidthInPx = 100;`
   - ❌  `const timeout = 5000;`, `const elementWidth = 100;`
-  - ✅ `let users = [...]`, `let customers = [...]`
-  - ❌ `let userList = [...]`, `let customerGroup = [...]`
+- **Avoid "Noise" Words and Redundant Prefixes**: Common offenders include Data, Info, Manager, Util, Handler, and redundant type prefixes like str or arr or sufixes like List or Group.
+  - ✅ `const userData = { name: 'User' };`, `const userInfo = { ... }`
+  - ❌ `const user = { name: 'User' };`
+  - ✅ `let users = [...]`, `let customers = [...]`, `const arrNumber = [1, 2];`
+  - ❌ `let userList = [...]`, `let customerGroup = [...]`, `const numbers = [1,2]`
 - **Be Consistent**: If you call something `getUser` in one place, don't call a similar function `fetchUser` in another. Pick a vocabulary and stick to it.
 - **Match Name Length to Variable Scope**: The larger the scope, the more descriptive its name needs to be.
 

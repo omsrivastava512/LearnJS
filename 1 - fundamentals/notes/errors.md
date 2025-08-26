@@ -2,7 +2,7 @@
 
 - [**Errors**](#errors)
   - [Programmer vs. Operational Errors](#programmer-vs-operational-errors)
-    - [Programmer Errors (Bugs)](#1-programmer-errors-bugs)
+    - [Programmer Errors (Bugs)](#1-programmer-errors)
     - [Operational Errors (Exceptions)](#2-operational-errors-exceptions)
   - [Asynchronous Errors](#asynchronous-errors)
   - [Advanced Pattern: Custom, Semantic Errors](#advanced-pattern-custom-semantic-errors)
@@ -381,7 +381,7 @@ This error is thrown when a numeric value is not within its allowed range or set
 
   - Creating an array with an invalid length: `new Array(-1);` or `new Array(Infinity);`
   - Passing an invalid value to number formatting functions: `(12.345).toFixed(-1);` or `(10).toPrecision(500);`
-  * Deep recursion that leads to a stack overflow, which is technically a `RangeError` in many environments because the call stack size has exceeded its allowed range.
+  - Deep recursion that leads to a stack overflow, which is technically a `RangeError` in many environments because the call stack size has exceeded its allowed range.
 
 - **Impact:** Halts execution. It's less common than a `TypeError` but often points to logical errors in algorithms or data processing where numbers are calculated incorrectly before being used in a range-sensitive function.
 

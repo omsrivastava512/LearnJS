@@ -31,7 +31,6 @@
 
 (AI Assisted/Generated)
 
-
 ## Part 1
 
 ### Syntax & Grammar
