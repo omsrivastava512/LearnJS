@@ -317,6 +317,59 @@ These treat numbers as a sequence of 32 bits (zeros and ones) and perform operat
 
 -----
 
+
+### Type Conversion (Explicit) 👉
+
+This is when you, the developer, deliberately change a value's type. It's intentional, predictable, and generally considered good practice.
+
+However, one can convert to only one of the three types in JS.
+
+**To a String:**
+
+- `String(value)`: The safest way. Works on `null` and `undefined`.
+- `value.toString()`: Works for almost everything but will throw an error on `null` or `undefined`.
+
+  <!-- end list -->
+
+  ```javascript
+  String(123); // "123"
+  String(null); // "null"
+  (123).toString(); // "123"
+  // null.toString(); // Throws a TypeError
+  ```
+
+**To a Number:**
+
+- `Number(value)`: The standard way. Converts the whole string. Returns `NaN` (Not a Number) if the string can't be fully converted. However, NaN is not exactly "not a number" but a value to represent **invalid number**. Try `typeof NaN`.
+- `parseInt(value, radix)`: Parses until it hits a non-numeric character or a fractional value. The second argument (`radix`, usually 10) is used to interpret the base of the numeral system the string hold numbers in.
+- `parseFloat(value)`: Similar to `parseInt` but includes decimal points.
+- **Unary Plus Operator (`+`)**: A common shortcut to convert a value to a number.
+    <!-- end list -->
+
+  ```javascript
+  Number("123.45"); // 123.45
+  Number("123a");   // NaN
+  parseInt("123a");  // 123
+  parseInt("55",8);  // 45 -> 55 in octal parses to 45 in decimal
+  +"123.45";        // 123.45 (shorthand for Number)
+  ```
+
+**To a Boolean:**
+
+- `Boolean(value)`: The standard constructor.
+- **Double Negation (`!!`)**: A popular and concise shortcut to force a value to its boolean equivalent.
+
+    <!-- end list -->
+
+    ```javascript
+    Boolean("hello"); // true
+    Boolean(0);       // false
+    !!"hello";        // true (shorthand)
+    !!0;              // false
+    ```
+
+-----
+
 ### Control Flow
 
 Control flow statements allow you to control the execution path of your code based on certain conditions.
@@ -479,3 +532,5 @@ Object.defineProperty(obj, "secret", {
 | Iterable | Whole objects | Can be looped over using for...of (must have a [Symbol.iterator])|
 
 **Iterators** often use the prototype `forEach()` method when you want to execute a function for each item in an array and don't need to break out of the loop.  The return value of `forEach()` is always `undefined`. And there is no way to stop a forEach() loop early. It will always run for every element in the array.
+
+-----
