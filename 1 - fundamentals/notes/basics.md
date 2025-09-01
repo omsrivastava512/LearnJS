@@ -317,7 +317,6 @@ These treat numbers as a sequence of 32 bits (zeros and ones) and perform operat
 
 -----
 
-
 ### Type Conversion (Explicit) 👉
 
 This is when you, the developer, deliberately change a value's type. It's intentional, predictable, and generally considered good practice.
@@ -366,6 +365,134 @@ However, one can convert to only one of the three types in JS.
     Boolean(0);       // false
     !!"hello";        // true (shorthand)
     !!0;              // false
+    ```
+
+-----
+
+### Type Coercion (Implicit)
+
+This is where JavaScript automatically converts types behind the scenes, usually when you use operators like `+`, `-`, `==`, or in a logical context like an `if` statement. While helpful, it can lead to unexpected results if you don't know the rules.
+
+There are three main types of coercion.
+
+#### 1. Coercion to a String
+
+This happens almost exclusively with the **binary `+` operator** when **at least one** of the operands is a string.
+
+- **Rule:** The non-string operand is converted to a string, and then the two are concatenated.
+
+    ```javascript
+    console.log(10 + "5"); // "105" (10 becomes "10")
+    console.log("The answer is " + 42); // "The answer is 42" (42 becomes "42")
+    console.log("Hello" + true); // "Hellotrue" (true becomes "true")
+    console.log([1, 2, 3, 4] + "5"); // "1,2,3,45" -> [1, 2, 3, 4] becomes "1,2,3,4"
+    ```
+
+#### 2. Coercion to a Number
+
+This happens with most other arithmetic operators (`-`, `*`, `/`, `%`), relational operators (`>`, `<`, etc.), and the unary `+` operator.
+
+- **Rule:** Both operands are converted to numbers before the operation is performed.
+
+  - `true` becomes `1`, `false` becomes `0`.
+  - `null` becomes `0`.
+  - `undefined` becomes `NaN`.
+  - Strings are parsed as numbers.
+
+    <!-- end list -->
+
+  ```javascript
+  console.log("10" - 5);      // 5 ("10" becomes 10)
+  console.log("5" * "2");      // 10 ("5" and "2" become 5 and 2)
+  console.log(true + 1);      // 2 (true becomes 1)
+  console.log(null + 5);      // 5 (null becomes 0)
+  console.log(undefined + 5); // NaN (undefined becomes NaN)
+  ```
+
+#### 3. Coercion to a Boolean ("Truthy" and "Falsy")
+
+This happens in logical contexts, such as `if` statements, `&&` (AND), `||` (OR), and with the `!` (NOT) operator.
+
+- **Rule:** The value is converted to `true` or `false` based on a short, fixed list of "falsy" values.
+
+- **The Falsy List:** There are only a handful of values that coerce to `false`. Everything else is "truthy".
+
+  - `false`
+  - `0` (and `-0`)
+  - `0n` (BigInt zero)
+  - `""` (empty string)
+  - `null`
+  - `undefined`
+  - `NaN`
+
+- **Important Truthy Gotchas:** Everything not in the falsy list is truthy, including:
+
+  - `"0"` (a string containing zero)
+  - `"false"` (the string "false")
+  - `[]` (an empty array)
+  - `{}` (an empty object)
+  - `function(){}` (an empty function)
+
+    <!-- end list -->
+
+    ```javascript
+    if ("0") { console.log("This runs!"); } // Runs, "0" is truthy
+    if ([]) { console.log("This also runs!"); } // Runs, [] is truthy
+    ```
+  
+The only times you should rely on coersion are:
+
+1. Checking for null or undefined with `if(value == null)...`
+2. Implicit String Conversion `'Value is ' + 42`
+3. Boolean Coersion in an if statement or ternary operator `if('')...`
+  
+❌ Never when comparing 2 values.
+
+#### Some Interesting Examples
+
+```javascript
+  console.log(!5 + 5);      // 5 (false becomes 0)
+  console.log(!5 + '5');      // false5
+  console.log(5||5 + '5');    // 5 || '55' -> 5 ('+' has a higher precedence)
+  console.log('5' + 5 - 5);    // '55' - 5 -> 50 (left to right)
+  console.log('5' + 5 / 5);    // '51' ('/' higher than '+')
+  console.log(!!+'0');    // false (!!+'0'-> !!0 -> false)
+
+```
+
+-----
+
+### Pitfalls
+
+- **Loose (`==`) vs. Strict (`===`) Equality:**
+
+  - The **loose equality `==`** operator performs type coercion before comparing.
+  - The **strict equality `===`** operator does **NOT** coerce. It checks if both the value and the type are the same.
+  - **Best Practice:** **Always use `===` and `!==`**. This prevents bugs from unexpected coercion. The only common exception where `==` is sometimes used is `value == null` to check for both `null` and `undefined` at once.
+  
+    > Always, **manually convert** values in your desired type before comparision.
+
+    <!-- end list -->
+
+    ```javascript
+    console.log(10 == "10"); // true (coercion happens)
+    console.log(10 === "10"); // false (types are different)
+
+    console.log(true == 1); // true
+    console.log(true === 1); // false
+
+    console.log(null == undefined); // true (a special case)
+    console.log(null === undefined); // false
+    ```
+
+- **Be Explicit:** When in doubt, perform explicit type conversion. Your code will be clearer and more predictable.
+
+    ```javascript
+    // Instead of relying on coercion...
+    // const total = "10" - 5;
+
+    // Be explicit.
+    const total = +"10" - 5;
     ```
 
 -----
