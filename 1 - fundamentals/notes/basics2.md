@@ -54,7 +54,7 @@ Introducing `strict mode`! ES5 now lets you put a leash on your code. Just slap 
 
 ### Function Declarations vs. Expressions (Hoisting)
 
-- *Function Declarations*
+- **Function Declarations**
 
     ```javascript
     function sum1 (a,b) {return a+b}
@@ -66,7 +66,7 @@ Introducing `strict mode`! ES5 now lets you put a leash on your code. Just slap 
     const sum2= function (a,b) {return a+b}
     ```
 
-The key difference between function declarations and function expression is that a function declaration is hoisted at the top of the script by the JavaScript compiler and thus, we can call a function declaration before  it is declared. 
+The key difference between function declarations and function expression is that a function declaration is hoisted at the top of the script by the JavaScript compiler and thus, we can call a function declaration before  it is declared.
 
 > Prefer function expressions assigned to `const` to keep things locked down. No **accidental redeclaration**. No calling the shots too early— this isn't your bed. Let your code flow top-down like a good story, not how the Avengers messed up time travel.
 
@@ -207,6 +207,68 @@ const arr = [1, 2];
 arr.chainablePush(3).chainablePush(4);
 console.log(arr); // [1, 2, 3, 4]
 ```
+
+### JavaScript Array Methods Cheat Sheet (AI Generated)
+
+#### **Inspection / Info:**
+
+| Method            | Returns        | Mutates? | Chainable? | Notes                           |
+|-------------------|----------------|----------|------------|---------------------------------|
+| `length`          | Number         | ❌       | N/A        | Property, not a method          |
+| `includes(val)`   | Boolean        | ❌       | ❌         | Checks if value exists          |
+| `indexOf(val)`    | Number         | ❌       | ❌         | First index of value            |
+| `lastIndexOf(val)`| Number         | ❌       | ❌         | Last index of value             |
+| `find(fn)`        | Element        | ❌       | ❌         | First element matching predicate|
+| `findIndex(fn)`   | Number         | ❌       | ❌         | Index of first match            |
+| `every(fn)`       | Boolean        | ❌       | ❌         | All elements pass test?         |
+| `some(fn)`        | Boolean        | ❌       | ❌         | Any element passes test?        |
+
+#### **Transformation:**
+
+| Method            | Returns        | Mutates? | Chainable? | Notes                           |
+|-------------------|----------------|----------|------------|---------------------------------|
+| `map(fn)`         | New array      | ❌       | ✅         | Pure transform                  |
+| `filter(fn)`      | New array      | ❌       | ✅         | Keeps matching elements         |
+| `flat(depth)`     | New array      | ❌       | ✅         | Flattens nested arrays          |
+| `flatMap(fn)`     | New array      | ❌       | ✅         | Map + flat(1)                   |
+| `slice(start, end)` | New array    | ❌       | ✅         | Extracts subarray               |
+| `concat(...arrs)` | New array      | ❌       | ✅         | Joins arrays                    |
+| `join(sep)`       | String         | ❌       | ❌         | Concatenates elements           |
+
+#### **Mutation (Impure):**
+
+| Method            | Returns            | Mutates? | Chainable? | Notes                           |
+|-------------------|--------------------|----------|------------|---------------------------------|
+| `push(...vals)`   | New length         | ✅       | ❌         | Adds to end                     |
+| `pop()`           | Removed element    | ✅       | ❌         | Removes from end                |
+| `shift()`         | Removed element    | ✅       | ❌         | Removes from start              |
+| `unshift(...vals)`| New length         | ✅       | ❌         | Adds to start                   |
+| `splice(start, del, ...vals)` | Removed elements | ✅       | ❌         | Insert/remove in place          |
+| `sort(fn)`        | Same array         | ✅       | ✅         | Sorts in place                  |
+| `reverse()`       | Same array         | ✅       | ✅         | Reverses in place               |
+| `fill(val, start, end)` | Same array   | ✅       | ✅         | Overwrites values               |
+| `copyWithin(target, start, end)` | Same array | ✅       | ✅         | Copies part of array            |
+
+#### **Reduction / Aggregation:**
+
+| Method            | Returns        | Mutates? | Chainable? | Notes                           |
+|-------------------|----------------|----------|------------|---------------------------------|
+| `reduce(fn, init)`| Any            | ❌       | ❌         | Left-to-right accumulator       |
+| `reduceRight(fn, init)` | Any      | ❌       | ❌         | Right-to-left accumulator       |
+| `toString()`      | String         | ❌       | ❌         | Comma-separated string          |
+| `toLocaleString()`| String         | ❌       | ❌         | Locale-aware string             |
+
+#### **ES2023+ Goodies:**
+
+| Method            | Returns        | Mutates? | Chainable? | Notes                           |
+|-------------------|----------------|----------|------------|---------------------------------|
+| `at(index)`       | Element        | ❌       | ❌         | Supports negative indices       |
+| `with(index, val)`| New array      | ❌       | ✅         | Returns copy with one element replaced |
+| `toReversed()`    | New array      | ❌       | ✅         | Pure version of reverse         |
+| `toSorted(fn)`    | New array      | ❌       | ✅         | Pure version of sort            |
+| `toSpliced(...)`  | New array      | ❌       | ✅         | Pure version of splice          |
+| `findLast(fn)`    | Element        | ❌       | ❌         | Last element matching predicate |
+| `findLastIndex(fn)` | Number       | ❌       | ❌         | Index of last match             |
 
 ## Objects
 
