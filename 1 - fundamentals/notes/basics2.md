@@ -270,6 +270,40 @@ console.log(arr); // [1, 2, 3, 4]
 | `findLast(fn)`    | Element        | ❌       | ❌         | Last element matching predicate |
 | `findLastIndex(fn)` | Number       | ❌       | ❌         | Index of last match             |
 
+### Common Confusions in Array Methods
+
+- **`slice` vs. `splice`**: The key difference is mutation. `slice(start, end)` does not mutate but returns you a new subarray with selected elements. `splice(start, deleteCount, ...itemsToAdd)` on the other hand is used to add, remove, or replace items in place. 
+
+    ```javascript
+    // SLICING
+    const arr = [1, 2, 3, 4, 5];
+    const sliced = arr.slice(1, 4);     // [2, 3, 4]
+    console.log(arr);    // [1, 2, 3, 4, 5] (unchanged)
+
+    // SPLICING
+    const arr = [1, 2, 3, 4, 5];
+    const spliced = arr.splice(1, 2, 99, 100);   // [2, 3] (removed elements)
+    console.log(arr);     // [1, 99, 100, 4, 5] (mutated)
+    ```
+
+- **`map` vs `forEach`**: While both iterate through each element of the array the key difference is the return value and chainablity. `map(callbackfn)` returns a **new array** with transformed values whereas `forEach(callbackfn)` only executes the callback for each element and returns nothing.
+
+    ```js
+    [1, 2, 3].map(x => x * 2);    // [2, 4, 6]
+    [1, 2, 3].forEach(x => x*2); // undefined
+    ```
+
+- **`filter` vs `find`**: Both call the predicate function for each element of the array. While `filter(fn)` returns **all matching elements** in the array for which the predicate returns `true`, `find(fn) the **first matching element** only.
+
+    ```js
+    [1, 2, 3, 4, 5].filter(x => x > 2); // [3, 4, 5]
+    [1, 2, 3, 4, 5].find(x => x > 2);   // 3
+    ```
+
+- **`sort` vs `toSorted` (ES2023+)**: `sort(compareFn)` mutates the original array while `toSorted(compareFn)` returns a new sorted array, leaving the original intact.
+
+- **`includes` vs `indexOf`**: While `includes(searchElement)` returns a **boolean**, `indexOf(searchElement)` returns the **index** (or `-1` if not found).
+
 ## Objects
 
 Want to store hetrogenous values? We've got objects for that. Objects are self-explanatory if only you name the properties right. Unlike arrays, no need write a novel explaining why index 2 is a Boolean but 3's a poem.
