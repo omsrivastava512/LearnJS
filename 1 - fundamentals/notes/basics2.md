@@ -87,7 +87,7 @@ sayGoodbye();    // works!
 
 ### Arrow functions
 
-> More on `this` later
+<!-- More on `this` later -->
 
 Arrow functions **do not have their own `this` binding**. They borrow `this` from the parent scope.
 
@@ -110,7 +110,7 @@ const person = {
 person.printHobbies();
 ```
 
-> I wanna talk about rests and spread here next
+<!-- I wanna talk about rests and spread here next -->
 
 ## Arrays
 
@@ -178,7 +178,7 @@ Impure Methods are like those annoying little cousins we all hate who graffiti y
 
 **Examples**: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`, `sort()`, `reverse()`. They alter the array directly, sometimes returning something, sometimes not.
 
-> Note: Even when you pass an array into a function (as an argument, or as a prop in React), what gets passed is a reference to the same underlying array object in memory. So a mutating method will alter then original caller's array too because both variables point to the same object.
+> Note: Even when you pass an array (or object) into a function (as an argument, or as a prop in React), what gets passed is a reference to the same underlying array object in memory. So a mutating method will alter then original caller's array too because both variables point to the same object.
 
 **Best Practice**: Confine mutators to localized operations within private scope by cloning the array first before operating.
 
@@ -186,7 +186,7 @@ Impure Methods are like those annoying little cousins we all hate who graffiti y
 const orderByName = (data) => [...data].sort(...)   
 ```
 
-> Pitfall: `sort()` is especially treacherous for mutating the original array. Most people confuse it as a pure method because it also returns the resultant array (chainable). Don't be like them.
+> Pitfall: `sort()` is especially treacherous for mutating the original array. Most people confuse it as a pure method because it also returns a resultant array (chainable). Don't be like them.
 
 #### 2. Pure Methods (Non-Mutating)
 
@@ -272,7 +272,7 @@ console.log(arr); // [1, 2, 3, 4]
 
 ### Common Confusions in Array Methods
 
-- **`slice` vs. `splice`**: The key difference is mutation. `slice(start, end)` does not mutate but returns you a new subarray with selected elements. `splice(start, deleteCount, ...itemsToAdd)` on the other hand is used to add, remove, or replace items in place. 
+- **`slice` vs. `splice`**: The key difference is mutation. `slice(start, end)` does not mutate but returns you a new subarray with selected elements. `splice(start, deleteCount, ...itemsToAdd)` on the other hand is used to add, remove, or replace items in place.
 
     ```javascript
     // SLICING
@@ -304,6 +304,121 @@ console.log(arr); // [1, 2, 3, 4]
 
 - **`includes` vs `indexOf`**: While `includes(searchElement)` returns a **boolean**, `indexOf(searchElement)` returns the **index** (or `-1` if not found).
 
+> Note: Arrays are just specialized objects with extra internal behavior (numeric indexing, length, etc.). Try `typeof []`.
+
 ## Objects
 
-Want to store hetrogenous values? We've got objects for that. Objects are self-explanatory if only you name the properties right. Unlike arrays, no need write a novel explaining why index 2 is a Boolean but 3's a poem.
+Want to store hetrogenous values? We've got objects for that. Objects are self-explanatory if only you name the properties right. Unlike arrays, data in objects are stored as key-value pairs that keep things tidy like `{name: 'Om', job: 'Being amazing'}.` No digging through indices like a raccoon in a dumpster. No need to write a novel explaining why index 2 is a boolean but 3's a poem.
+
+Keys are usually **strings** (or symbols), values can be anything: strings, numbers, functions, even other objects. Even if you use a number, boolean, or object as a key, it gets **coerced to a string**.
+
+```js
+// Creation
+const obj = { key: "value" }; // Literal
+const obj2 = new Object(); // Constructor
+
+// Access
+obj.key // Dot notation
+obj["key"]  // Bracket notation
+```
+
+> Use the dot notation when the key is a valid identifier and you know it at the time of coding. The bracket notation is mostly used for dynamic access when the key is **stored in a variable**, contains spaces or special characters, or is a number.
+
+```javascript
+const propertyToAccess = 'name';
+const user = { name: 'Alice', 'user-role': 'Admin' };
+
+console.log(user.name); // 'Alice'
+console.log(user[propertyToAccess]); // user['name'] -> 'Alice' (Accessing via variable)
+console.log(user['user-role']); // 'Admin' (Accessing with special characters)
+```
+
+> Treat key names as variable names. Apply name rules. Consider naming conventions. Remember that dot notation only works with valid JavaScript identifiers. This means that any keys following the naming rules can be used in a dot notation. Even the reserved keywords! Look at this wierd looking object below:
+
+```js
+const obj = {
+    // can be accessed by both
+    id: 'a1',
+    category: 'books',
+    $: 55, 
+    _: 55,
+    true: true, // yeah this too - the engine must be resolving `obj.true` as `obj["true"]` internally for consistency
+    function(){},   // what is this syntax?
+
+    // can be accessed only through bracket notation
+    1: 5, 
+    '-': "1", 
+    '{}': { },
+    '()=>{}': () => { },
+    [window]: window     // what in the world is this???
+}
+```
+
+### Functions in Objects
+
+Javascript treats functions like any other value. This means that functions can be stored, or passed on as any other value. When you store a function as a property inside an object, it's called a **method**.
+
+```js
+const peppaPig = {
+    name: "Peppa",
+    species: "Pig",
+    age: 4,
+    catchphrase: "Eee-oink!",
+    isDirty: false,
+
+    // Object Methods -> storing functions as properties
+    oink: function () {
+        console.log(`${this.name} goes ${this.catchphrase}`);     // this -> current object
+    }
+
+    // Modern (ES6) Syntax
+    jumpInPuddle(){
+        console.log("Sploosh!")
+        this.isDirty = true;
+    }
+};
+```
+
+Now, you can tell what `function(){}` meant up there. We used `function` as the key identifier (reserved words are valid) and used the ES6 syntax to create it a function that does nothing.
+
+**Can I use an arrow function here?** Definitely, if you keep in mind that an arrow function does not have its own this binding. Instead, it inherits this from its parent scope. In the above case, `this` means the `Window` object or whatever your global environment is called in your runtime. So use them only when you want to preserve the `this` of its lexical scope.
+
+```js
+let counter = {
+    count: 0,
+    start() {
+    // 'this' here means the 'counter' object.
+    setInterval(() => {
+        this.count++;   // this inheritred from the `start()` method
+    }, 1000);
+    }
+};
+```
+
+**Invoking the methods**: Methods tied to an object can be accessed like any other value and invoked like any other function.
+
+```js
+peppaPig.oink();            // dot notation
+peppaPig['jumpInPuddle']()  // bracket notation    
+// Note that `peppaPig['jumpInPuddle']` is used to first access the value of the property, which returns a function and then it's called using `()`.
+```
+
+> **Best Practice**: Always type check your methods like `typeof peppaPig['oink'] === "function"`  before you call them, especially when dealing with external, dynamic, user-driven code like `typeof peppaPig[selectedAction] === "function"`, if you don't want a `TypeError` beaming off your screen.
+
+<!-- Talk about optional chaining and computed keys -->
+
+## Everything Is An Object
+
+...
+
+### Functions As An Objext
+
+Functions in JS are fundamentally callable objects. Functions have an internal `[[Call]]` slot, which the JS engine uses when you invoke them. Moreover, Functions in JS are first-class objects. This means they can:
+
+1. Be stored in a variable.
+2. Be passed as an argument.
+3. Be returned from another function.
+4. Be assigned as an object property.
+5. Be constructed dynamically (new Function()).
+
+<!-- Talk about autoboxing and wrapper objects -->
